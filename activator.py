@@ -1,22 +1,25 @@
 import requests
 import config
+import json
 
-request_url = 'https://www.cardactivation.citi.com/Home/Continue1'
-request_headers = {
-    'Accept': 'application/json, text/javascript',
-    'Host': 'www.cardactivation.citi.com',
-    'Content-Type': 'application/json; charset=UTF-8',
-    'Origin': 'https://www.cardactivation.citi.com',
-    'Accept-Encoding': 'gzip, deflate, br',
-    'Accept-Language': 'en-US,en;q=0.9',
-}
-request_data = {
-    'cardNumber': config.card_number,
-    'securityCode': config.security_code
-}
+CONTINUE_URL = 'https://www.cardactivation.citi.com/Home/Continue1'
+CARD_NUMBER = config.card_number
+SECURITY_CODE = config.security_code
 
-r = requests.post(request_url, data=request_data, headers=request_headers)
 
-print(r.status_code)
-print(r.text)
-print(r.json())
+def continue_request(url, card_number, security_code, pin):
+    continue_data = {
+        'cardNumber': card_number,
+        'securityCode': security_code,
+        'ssn': pin
+    }
+
+    r = requests.post(url, json=continue_data)
+
+    return r
+
+
+continue_response = continue_request(
+    CONTINUE_URL, CARD_NUMBER, SECURITY_CODE, 1433).json()
+
+print(continue_response)
