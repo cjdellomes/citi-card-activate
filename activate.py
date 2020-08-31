@@ -68,6 +68,7 @@ def selenium_brute_force(possible_pins, card_number, security_code, url, wait_de
                 print('match ' + pin)
                 return
 
+            print('no match ' + pin)
             print(temp_message_text)
             driver.close()
 
